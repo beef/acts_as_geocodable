@@ -138,7 +138,7 @@ module CollectiveIdea #:nodoc:
         def validates_as_geocodable(options = {})
           options = options.reverse_merge :message => "Address could not be geocoded.", :allow_nil => false
           validate do |geocodable|
-            if !(options[:allow_nil] && geocodable.to_location.attributes.all?(&:blank?)) &&
+            if !(options[:allow_nil] && geocodable.to_location.attributes.reject{|k,v| k == :precision }.all?(&:blank?)) &&
                 !Geocode.find_or_create_by_location(geocodable.to_location)
               geocodable.errors.add_to_base options[:message]
             end
